@@ -1,0 +1,16 @@
+{% extends "store/users/profile.html" %}
+{% block content %}
+{% include 'store/users/profile-menu.html' %}
+<h4>Billing Detail</h4>
+<div class="inner-container-billing">
+    <form action="" method="POST">
+        {% csrf_token %}
+        {% for field in form %}
+        
+        <p>{{field.label}}<span>{{field}}</span></p>
+        {% endfor %}
+        <button type="submit">Save</button>
+    </form>
+
+</div>
+{% endblock content %}

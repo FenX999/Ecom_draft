@@ -1,0 +1,36 @@
+{% load static %}
+{% block content %}
+<h2>Login page</h2>
+<h3> you are currently in the {{path}} app.</h3>
+<div>
+    <form class='form', method='POST'>
+    <div>
+        {% csrf_token %}
+        <label for="email_input">Email</label>
+        <input id="email" name="email" type="email" placeholder="e.g 'username@email.com'"/>
+    </div>    
+    <div>
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password"
+            placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" />
+    </div>
+        <button class="btn btn--main" type="submit">Submit</button>
+    </form>
+</div>
+{% if form.errors %}
+<div class="alert alert-danger" role="alert">
+    {% for field, errors in form.errors.items %}
+    {% for error in errors %}
+    <b>{{ field }}</b>: {{ error }}
+    {% endfor %}
+    {% endfor %}
+</div>
+{% endif %}
+{% if path == 'shop' %}
+<div>
+    <h3>Not registered yet?</h3>
+        <a href="{% url 'shop:customer-register' %}">Register</a>
+</div>
+{% endif %}
+
+{% endblock content %}

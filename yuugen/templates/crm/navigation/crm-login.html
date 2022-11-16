@@ -1,0 +1,19 @@
+{% comment %} {% block login %}
+{% if page == 'login' %}
+<h2>Login page</h2>
+<div>
+    <form class='form', method='POST'>
+    <div>
+        {% csrf_token %}
+        <label for="email_input">Email</label>
+        <input id="email" name="email" type="email" placeholder="e.g 'username@email.com'"/>
+    </div>    
+    <div>
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password"
+            placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" />
+    </div>
+        <button class="btn btn--main" type="submit">Submit</button>
+    </form>
+</div>
+{% endblock login %} {% endcomment %}

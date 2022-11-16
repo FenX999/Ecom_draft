@@ -1,0 +1,35 @@
+{% extends 'cms/cms-base.html' %}
+{% block content %}
+{% include 'cms/page-creator-navbar.html' %}
+<form class="form-group">
+    <p>
+        <div class="card">
+            <div class="card-header">
+                {{page.title.label}}
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">{{page.title.help_text}}</h5>
+                <p>
+                    {{page.title}}
+                </p>
+            </div>
+        </div>
+    </p>
+    <p>
+        <div class="card">
+            <div class="card-header">
+                Content Manager
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">{{page.content.label}}</h5>
+                <p>
+                    {{page.content}}
+                </p>
+            </div>
+        </div>
+    </p>
+    <p>
+        <button id="page-submit" class="btn btn-primary">Save Page</button>
+    </p>
+<form>
+{% endblock content %}

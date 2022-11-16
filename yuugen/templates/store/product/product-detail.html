@@ -1,0 +1,40 @@
+{% extends "store/store-base.html"%}
+{%load static%}
+{% block content %}
+<div>
+    <h1>Product Detail</h1>
+    {% csrf_token %}
+    <img src="{{img.img.url}}" width="600" height="400"/>
+    <p><span>{{obj.designation}}</span></p>
+    <p><span>{{obj.description}}</span></p>
+    <p>
+    {% if finition|length > 1 %}
+    <label for="finition">Choose a</label>
+        <select class="custom-select" id="select_finition">
+            <option  value="" selected="selected">--Finition--</option>
+            {% for f in finition %}
+            <option value="{{f.id}}">
+                {{f.finition}}
+            </option>
+            {% endfor %}
+        </select>
+    {% endif %}
+    </p>
+    <p>
+    {% if size|length > 1 %}
+    <label for="size">Choose a</label>
+        <select class="custom-select" id="select-size">
+            <option  value="" selected="selected">--Size--</option>
+            {% for s in size %}
+            <option value="{{s.id}}">
+                {{s.value}}
+            </option>
+            {% endfor %}
+        </select>
+    {% endif %}
+    </p>
+    <div id="price-container">
+    </div>
+    
+</div>
+{% endblock content %}

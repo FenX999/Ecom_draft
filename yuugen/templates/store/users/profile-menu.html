@@ -1,0 +1,27 @@
+{% load static %}
+{% block side-menu %}
+<div class="profile-menu-container">
+    <h2>Customer Profile</h2>
+    <div class="password-container">
+        <p>
+        <a href="{% url 'shop:customer-password' %}">Change Passord</a>
+        </p>
+    </div>
+    <div class="billing-container">
+        <p>
+        <a href="{% url 'shop:customer-billing' %}">Billing Detail</a>
+        </p>
+    </div>
+    <div class="shipping-container">
+        <p>
+        <a href="{% url 'shop:customer-shipping' %}">Shipping Detail</a>
+        </p>
+    </div>
+    <div class="marketing-container">
+        <p>
+        <a href="{% url 'shop:customer-marketing' %}">News Letter</a>
+        </p>
+    </div>
+
+</div>
+{% endblock side-menu %}

@@ -1,0 +1,58 @@
+.theme-controler{
+    margin: 0;
+    padding: 0;
+    
+    width: 100%;
+    height: 100%;
+}
+
+a{
+    text-decoration: none;
+    text-align:center;
+    color: transparent;
+    width: 0%;
+    height: 0%;
+}
+
+a:hover{
+    color: var(--light-grey);
+}
+.theme_container1{
+    position:fixed;
+    width: 12vw;
+    height: 10vh;
+    top: 52vh;
+    left:45vw;
+}
+#link{
+    position: fixed;
+    height: var(--size);
+    width: var(--size);
+    
+    border-radius: var(--size);
+    border: 2px var(--light-gold) solid;
+    background-color: var(--dark-blue);
+
+}
+
+#link:hover{
+    position:fixed;
+    transition: 1s;
+    height: cal(var(--size)*1.3);
+    width: calc(var(--size)*6);
+    border-spacing: 2px,2px;
+    background-color: transparent;
+}
+.theme_container2{
+    width: 4px;
+    height: 4px;
+    position:fixed;
+    top:20vh;
+    right:10vw;
+}
+
+.theme_container3{
+    position: fixed;
+    top:70vh;
+    left:10vw;
+}

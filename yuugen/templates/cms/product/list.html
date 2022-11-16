@@ -1,0 +1,65 @@
+{% extends 'cms/cms-base.html' %}
+{% block content %}
+<div class="search-result(container">
+    <p>
+   
+        {% include 'cms/navigation/results.html' %}
+    </p>
+</div>
+<div class="product-list-container">
+    <table id="product-list" class='table table-sm table-striped'>
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">Designation</th>
+                <th scope="col">SKU</th>
+                <th scope="col">Slug</th>
+                <th scope="col">Description</th>
+                <th scope="col">Theme Tag</th>
+                <th scope="col">Catalog Tag</th>
+                <th scope="col">Operation Tag</th>
+                <th scope="col">Created at</th>
+                <th scope="col">Is Active</th>
+                {% if request.user.is_manager %}
+                <th scope="col">Created By</th>
+                <th scope="col">Modified By</th>
+                {% endif %}
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+            <tr>
+                <td>{{product.designation}}</td>
+                <td>{{product.SKU}}</td>
+                <td>{{product.slug}}</td>
+                <td>{{product.description|truncatewords:2}}</td>
+                <td>{{product.ttag}}</td>
+                <td>{{product.ctag}}</td>
+                <td>{{product.otag}}</td>
+                <td>{{product.created_at}}
+                <td>{{product.is_active}}</td>
+                {% if request.user.is_manager %}
+                <td>{{product.created_by}}</td>
+                <td>{{product.modified_by}}</td>
+                {% endif %}
+                <td>
+                    <!-- Call to action buttons -->
+                    <ul class="list-group-horizontal m-0">
+                        <li class="list-inline-item">
+                            <button class="btn btn-outline-success btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
+                        </li>
+                        {% if request.user.is_manager %}
+                        <li class="list-inline-item">
+                            <button class="btn btn-outline-danger btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-trash"></i></button>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+<div>
+
+
+{% endblock content %}

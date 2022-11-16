@@ -1,0 +1,55 @@
+{% extends 'cms/cms-base.html' %}
+{% block content %}
+<div class="search-result(container">
+    <p>
+   
+        {% include 'cms/navigation/results.html' %}
+    </p>
+</div>
+<div class="page-list-container">
+    <table id="product-list" class='table table-striped'>
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">Title</th>
+                <th scope="col">Url</th>
+                <th scope="col">Content</th>
+                <th scope="col">Is Active</th>
+                {% if request.user.is_manager %}
+                <th scope="col">Created By</th>
+                <th scope="col">Modified By</th>
+                {% endif %}
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for page in pages %}
+            <tr>
+                <td>{{page.title}}</td>
+                <td>{{page.url}}</td>
+                <td>{{page.content|truncatewords:2}}</td>
+                <td>{{page.is_active}}</td>
+                {% if request.user.is_manager %}
+                <td>{{page.created_by}}</td>
+                <td>{{page.modified_by}}</td>
+                {% endif %}
+                <td>
+                    <!-- Call to action buttons -->
+                    <ul class="list-group-horizontal m-0">
+                        <li class="list-inline-item">
+                            <button class="btn btn-outline-success btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
+                        </li>
+                        {% if request.user.is_manager %}
+                        <li class="list-inline-item">
+                            <button class="btn btn-outline-danger btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-trash"></i></button>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+<div>
+
+
+{% endblock content %}

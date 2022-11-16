@@ -1,0 +1,6 @@
+{% extends 'cms/cms-base.html' %}
+{% block content %}
+<h6>Welcome {{request.user.email}}</h6>
+<h5>Home</h5>
+{% include 'cms/navigation/results.html' %}
+{% endblock content %}

@@ -1,0 +1,27 @@
+:root{
+    --dark-blue:    #122130;
+    --dark-green:   #3A4332;
+    --dark-grey:    #4F575C;
+    --light-grey:   #F6F6F6;
+    --light-gold:   #DAA520;
+    --gold:         #D4AF37;
+    --forest-green: #889C83;
+    --size: 1.5rem;
+}
+
+body{
+    padding: 0;
+    margin: 0;
+    font-family: 'Lato', sans-serif;
+    font-family: 'Roboto', sans-serif;
+    /* background-image: linear-gradient(
+        rgba(0,0,0,0.7),
+        rgba(0,0,0,0.2)),
+        url('../img/test.jpg'); */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100vh;
+    max-width: 100%;
+    -webkit-font-smoothing: antialiased;
+}

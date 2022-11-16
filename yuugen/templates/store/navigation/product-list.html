@@ -1,0 +1,20 @@
+{% extends 'store/store-base.html' %}
+
+{% block content %}
+<h1>Product List</h1>
+{% for obj in objects %}
+    {% url 'shop:product-detail' obj.slug as the_url %}
+        <div>
+            <div class="" name="catalog_list">
+                <a href="{{the_url}}"><h2>{{obj.designation}}</h2></a>
+                <p>{{obj.description}}</p>
+                {% for d in detail %}
+                    {% if obj.SKU == d.SKU %}
+                        {{d.public_price}}
+                    {% endif %}
+                {% endfor %}
+                <hr>
+            </div>
+        </div> 
+{% endfor %}
+{% endblock %}

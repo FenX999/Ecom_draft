@@ -1,0 +1,29 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="">
+        {% block title %}Yuugen Ems{% endblock title %}
+    </head>
+    <body>
+        <section class="headers-container">
+            {% comment %} headers {% endcomment %}
+        </section>
+        <section class="menu-container">
+            {% comment %} right menu {% endcomment %}
+        </section>
+        <section class="content-container">
+            {% comment %} block content {% endcomment %}
+            {% block content %}
+            {% endblock content %}
+        </section>
+        <section class="footer-container">
+            {% comment %} footer {% endcomment %}
+        </section>
+    </body>
+</html>

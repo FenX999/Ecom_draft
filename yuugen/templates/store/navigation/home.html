@@ -1,0 +1,17 @@
+{% extends 'store/store-base.html' %}
+{% load static%}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/home.css'%}">
+<section class="theme-controler">
+    <h1>Home</h1>
+    {% for d in data  %}
+    {% url 'shop:catalog-list' d.tslug as the_url %}
+        <div class="theme_container" id="link">
+                <a href="{{the_url}}"><h2>{{d.ttag}}</h2></a>
+                <hr>
+            </div>
+    {% endfor %}
+    </div>
+</section>
+{% endblock %}

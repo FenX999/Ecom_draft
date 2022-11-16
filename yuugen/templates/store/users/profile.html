@@ -1,0 +1,50 @@
+{% extends 'store/store-base.html' %}
+{% load static %}
+
+{% block content %}
+{% block menu %}
+    {% include 'store/users/profile-menu.html' %}
+{% endblock menu %}
+{% block profil %}
+    {% if detail %}
+        <div class="customer-detail-container">
+            <p>{{detail.email}}</p>
+        </div>
+    {% endif %}
+    {% if marketing %}
+        <div class="customer-marketing-container">
+            <p>{{marketing.news_letter}}</p>
+        </diV>
+    {% endif %}
+    {% if billing %}
+        <div class="customer-billing-container">
+            <h4>Billing Detail</h4>
+            <p>{{billing.fname}}</p>
+            <p>{{billing.lname}}</p>
+            <p>{{billing.address_1}}</p>
+            <p>{{billing.address_2}}</p>
+            <p>{{billing.zip_code}}</p>
+            <p>{{billing.city}}</p>
+            <p>{{billing.states}}</p>
+            <p>{{billing.country}}</p>
+        </div>
+    {% endif %}
+    {% if shipping %}
+    <div class="customer-shipping-container">
+        <h4>Shipping Detail</h4>
+        <p>{{shipping.fname}}</p>
+        <p>{{shipping.lname}}</p>
+        <p>{{shipping.address_1}}</p>
+        <p>{{shipping.address_2}}</p>
+        <p>{{shipping.zip_code}}</p>
+        <p>{{shipping.city}}</p>
+        <p>{{shipping.states}}</p>
+        <p>{{shipping.country}}</p>
+    </div>
+{% endif %}
+{% endblock profil %}
+{% block order %}
+
+{% comment %} waiting for order display  {% endcomment %}
+{% endblock order %}
+{% endblock content%}

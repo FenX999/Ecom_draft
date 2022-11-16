@@ -1,0 +1,54 @@
+<div>
+    <p>{{request.user.is_manager}}</p><span>{{request.user.email}}</span>
+<form class="cms-register-form" action="" method="POST">
+    {% csrf_token %}
+    <fieldset class="basic-fieldset">
+        <div class="mb-3">
+            <label class="fom-label">{{form.email.label}}</label>
+            <p>{{form.email}}</p>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">{{form.password1.label}}</label>
+            <p>{{form.password1}}</p>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">{{form.password2.label}}</label>
+            <p>{{form.password2}}</p>
+        </div>
+    </fieldset>
+    {% if request.user.is_manager %}
+    <fieldset class="manager-fieldset">
+        <div class="manager-form">
+            <div class="mb-3">
+                <label class="form-label">
+                    {{form.created_by.label}}
+                </label>
+            <p>{{form.created_by}}</p>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">{{form.is_manager.label}}</label>
+                <span>{{form.is_manager}}</span>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">{{form.is_staff.label}}</label>
+                <span>{{form.is_staff}}</span>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">{{form.is_active.label}} </label>
+                <span>{{form.is_active}}</span>
+            </div>
+        <div>
+        {% endif %}
+        <button type="submit">register</button>
+    </fieldset>
+</form>
+</div>
+{% if form.errors %}
+<div class="alert alert-danger" role="alert">
+    {% for field, errors in form.errors.items %}
+    {% for error in errors %}
+    <b>{{ field }}</b>: {{ error }}
+    {% endfor %}
+    {% endfor %}
+</div>
+{% endif %}

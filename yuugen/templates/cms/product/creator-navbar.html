@@ -1,0 +1,15 @@
+{% block product-creation-navbar %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <div>
+        <h5>Product Creator</h5>
+        <h6 id="user_id">Welcome {{request.user.email}}</h6>
+    </div>
+    <div class="btn-group" role="group">
+        <a class="btn btn-outline-info" type="button" data-toggle="collapse" data-target="#navigation" aria-expanded="false" aria-controls="collapsenavigation">Navigation</a>
+        <a class="btn btn-outline-info" type="button" data-toggle="collapse" data-target="#product" aria-expanded="false" aria-controls="collapseproduct">Product</a>
+        <a class="btn btn-outline-info" type="button" data-toggle="collapse" data-target="#detail" aria-expanded="false" aria-controls="collapsedetail">Detail</a>
+        <a class="btn btn-outline-info" type="button" data-toggle="collapse" data-target="#images" aria-expanded="false" aria-controls="collapseimages">Images</a>
+        <a class="btn btn-outline-info" type="button" data-toggle="collapse" data-target="#help" aria-expanded="false" aria-controls="collapsehelp">Help</a>
+    </div>
+</div>
+{% endblock product-creation-navbar %}

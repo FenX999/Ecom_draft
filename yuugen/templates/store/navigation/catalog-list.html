@@ -1,0 +1,14 @@
+{% extends 'store/store-base.html' %}
+
+{% block content %}
+<h1>Catalog List</h1>
+{% for d in data %}
+{% url 'shop:product-list' d.catalog_tag.cslug as the_url %}
+    <div>
+        <div class="" name="catalog_list">
+            <a href="{{the_url}}"><h2>{{d.catalog_tag.ctag}}</h2></a>
+            <hr>
+        </div>
+    </div> 
+{%endfor%}
+{% endblock %}
