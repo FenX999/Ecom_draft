@@ -29,7 +29,7 @@
         <tbody>
             {% for product in products %}
             <tr>
-                <td><a href="{% url "cms:product-info" pslug=product.slug %}">{{product.designation}}</a></td>
+                <td>{{product.designation}}</a></td>
                 <td>{{product.SKU}}</td>
                 <td>{{product.slug}}</td>
                 <td>{{product.description|truncatewords:2}}</td>
@@ -46,11 +46,11 @@
                     <!-- Call to action buttons -->
                     <ul class="list-group-horizontal m-0">
                         <li class="list-inline-item">
-                            <button class="btn btn-outline-success btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
+                            <a href="{% url "cms:product-info" pslug=product.slug %}" class="btn btn-outline-success btn-sm rounded-0" role="button" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-eye"></i></a>
                         </li>
                         {% if request.user.is_manager %}
                         <li class="list-inline-item">
-                            <button class="btn btn-outline-danger btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-trash"></i></button>
+                            <a href="{% url "cms:del-product" pslug=product.slug %}"> class="btn btn-outline-danger btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-trash"></i></>
                         </li>
                         {% endif %}
                     </ul>

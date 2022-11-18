@@ -306,9 +306,10 @@ def view_product_form(request, pslug):
     context['product'] = Product.objects.get(slug = pslug)
     context['images'] = ProductImage.objects.filter(SKU__SKU__icontains= context['product'].SKU)
     context['prices'] = PublicPrice.objects.filter(SKU__SKU__icontains = context['product'].SKU)
+    print(context['prices'])
     return TemplateResponse(request, template, context)
 
-def edit_product(request):
+def del_product(request, pslug):
     '''
     View that deal with product edition based on the following rules:
     staff cannot change:

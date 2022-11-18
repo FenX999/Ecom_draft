@@ -17,6 +17,7 @@ urlpatterns = [
     path('product_creator/', views.product_creator, name='product-creation'),
     path('products_list',views.product_list, name ='product-list'),
     path('products_info/<pslug>',views.view_product_form, name ='product-info'),
+    path('del_product/<pslug>',views.del_product, name ='del-product'),
     #pages CRUD
     path('page_creator/', views.flatpage_creator, name='page-creator'),
     path('page_editor/', views.flatpage_list, name='page-editor'),
