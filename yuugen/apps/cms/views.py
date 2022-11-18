@@ -300,12 +300,12 @@ def product_creator(request):
         return JsonResponse(msg) 
     return TemplateResponse(request, template, context)
 
-def view_product_form(request, product_id):
+def view_product_form(request, pslug):
     template = 'cms/product/info.html'
     context = {}
-    context['product'] = Product.objects.get(id = product_id)
-    context['images'] = product.objects.filter(SKU__contains = product.designation)
-    context['prices'] = PublicPrice.objects.filter(SKU__contains = product.designation)
+    context['product'] = Product.objects.get(slug = pslug)
+    context['images'] = ProductImage.objects.filter(SKU__SKU__icontains= context['product'].SKU)
+    context['prices'] = PublicPrice.objects.filter(SKU__SKU__icontains = context['product'].SKU)
     return TemplateResponse(request, template, context)
 
 def edit_product(request):

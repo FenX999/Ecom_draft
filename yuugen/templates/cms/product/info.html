@@ -1,0 +1,21 @@
+{% extends 'cms/cms-base.html' %}
+{% block content %}
+<div class="page_title">
+    <h3>{{product.designation}} details</h3>
+</div>
+<div>
+    {% include 'cms/product/edition/tags.html' %}
+</div>
+
+<div>
+    {% include 'cms/product/edition/product.html' %}
+</div>
+
+<div>
+    {% include 'cms/product/edition/attributes.html' %}
+</div>
+<div>
+    <button type="button" class="btn btn-sm btn-outline-info" id="edit_product_submit">submit</button>
+</div>
+
+{% endblock content %}
