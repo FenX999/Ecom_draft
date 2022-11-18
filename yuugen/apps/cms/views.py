@@ -301,12 +301,59 @@ def product_creator(request):
     return TemplateResponse(request, template, context)
 
 def view_product_form(request, pslug):
+    #setting variable for function and logic
     template = 'cms/product/info.html'
     context = {}
+    attr = []
+    #setting context to be demonstrate
+    context['ttag'] = ThemeTag.objects.all()
+    context['ctag'] = CatalogTag.objects.all()
+    context['otag'] = OperationTag.objects.all()
+    context['finitions'] = Finition.objects.all()
+    context['sizes'] = Size.objects.all()
+    #setting fetched context
     context['product'] = Product.objects.get(slug = pslug)
-    context['images'] = ProductImage.objects.filter(SKU__SKU__icontains= context['product'].SKU)
     context['prices'] = PublicPrice.objects.filter(SKU__SKU__icontains = context['product'].SKU)
-    print(context['prices'])
+    for i in context['prices']:
+        finition =  str(i.SKU).split('_')[2]
+        size =  str(i.SKU).split('_')[3]
+        price =  i.public_price
+        image = ProductImage.objects.get(SKU__SKU__icontains= str(context['product'].SKU)+'_'+finition)
+        output = {
+            'id': i.id,
+            'finition': finition,
+            'size': size,
+            'price': str(price),
+            'image': image.img,
+        }
+        attr.append(output)
+    context['attributes'] = attr
+    
+    #dealing with ajax call for new entry plus editing existing
+    if request.POST.get('ajax_post') == 'create_ttag':
+        ThemeTag.objects.create(
+            created_by = creator,
+            ttag = request.POST.get('sent_ttag'),
+            tslug = slugify(request.POST.get('sent_ttag')),
+        )
+    context['ttag'] = ThemeTag.objects.all()
+
+
+    if request.POST.get('ajax_post') == 'create_ctag':
+        CatalogTag.objects.create(
+            created_by = creator,
+            ctag = request.POST.get('sent_ctag'),
+            cslug = slugify(request.POST.get('sent_ctag')),
+        )
+        context['ctag'] = CatalogTag.objects.all()
+
+    if request.POST.get('ajax_post') == 'create_otag':
+        OperationTag.objects.create(
+            created_by = creator,
+            otag = request.POST.get('sent_otag'),
+            oslug = slugify(request.POST.get('sent_otag')),
+        )
+        context['otag'] = OperationTag.objects.all()
     return TemplateResponse(request, template, context)
 
 def del_product(request, pslug):

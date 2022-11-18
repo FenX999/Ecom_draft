@@ -2,19 +2,50 @@
     <table class="table table-striped" id="Attributes_table">
         <thead class="thead-dark">
             <tr>
-                <th scope="col-auto">Finition</th>
-                <th scope="col-auto">Size</th>
-                <th scope="col-auto">Prices</th>
-                <th scope="col-auto">Images</th>
+                <th scope="col">Add/Del row</th>
+                <th scope="col">
+                    <div class="form-group">
+                        <label for="finition_input">Finition</label>
+                        <p>
+                            <input type="text" placeholder="add finition to the selector" id="finition_input">
+                            <button  class="btn btn-outline-success btn-sm rounded-0" type"submit" id="finition_submit">
+                                Submit
+                            </button>
+                        </p>
+                    </div>
+                </th>
+                <th scope="col">
+                    <div class="form-group">
+                        <label for="finition_input">Size</label>
+                        <p>
+                            <input type="text" placeholder="add size to the selector" id="size_input">
+                            <button  class="btn btn-outline-success btn-sm" type"submit" id="size_submit">
+                                Submit
+                            </button>
+                        </p>
+                    </div>
+                </th>
+                <th scope="col">Prices</th>
+                <th scope="col">Images</th>
+                <th scope="col">Edit/Del Entry</th>
             </tr>
         </thead>
         <tbody>
-            {% comment %} {% for attr in attributes %} {% endcomment %}
-            <tr id="editable">
+            {% for attr in attributes %}
+            <tr id="{{attr.id}}" class="duplicable">
                 <td>
-                    <form class='inline-form'>
-                        <label class='my-1 mr-2' for="edit_select-input">finition</label>
-                        <select name="select_finition" class="custome-select my-1 mr-sm2" id="finition_select">
+                    <ul class="list-inline">
+                        <li>
+                            <button name = "del_row" class="btn btn-outline-danger btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Delete Row" id="del_row"><i class="fa-solid fa-minus"></i></button>
+                        </li>
+                        <li>
+                            <button name ="add_row" class="btn btn-outline-success btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Add Row" id="add_row"><i class="fa-solid fa-plus"></i></button>
+                        </li>
+                    </ul>
+                </td>
+                <td>
+                    <div class="form-group">
+                        <select class="form-control" id="edit_select_finition" disabled>
                             <option selected>{{attr.finition}}</option>
                             {% for finition in finitions %}
                             <option value="{{finition.id}}">
@@ -22,22 +53,19 @@
                             </option>
                             {% endfor %}
                         </select>
-                        <button class="btn btn-sm btn-outline-info" type="button" id='edit_select_finition'>Edit</button>
-                    </form>
+                    </div>
                 </td>
                 <td>
-                    <form class='inline-form'>
-                        <label class='my-1 mr-2' for="edit_select-input">size</label>
-                        <select name="select_size" class="custome-select my-1 mr-sm2" id="size_select">
+                    <div class="form-group">
+                        <select  class="form-control" id="edit_select_size" disabled>
                             <option selected>{{attr.size}}</option>
                             {% for size in sizes %}
-                            <option value="{{finition.id}}">
-                                {{finition.value}}
+                            <option value="{{size.id}}">
+                                {{size.value}}
                             </option>
                             {% endfor %}
                         </select>
-                        <button class="btn btn-sm btn-outline-info" type="button" id='edit_select_size'>Edit</button>
-                    </form>
+                    </div>
                 </td>
                 <td class="input_attr_price">
                     <div class="input-group mb-3">
@@ -46,18 +74,26 @@
                             <span class="input-group-text">0.00</span>
                         </div>
                         <input  id="price_attr_input" type="text" class="form-control plaintext" value="{{attr.price}}">
-                        <button class="btn btn-sm btn-outline-info" type="button" id='edit_input_price'>Edit</button>
                     </div>
                 </td>
                 <td class="input_attr_img">
                     <div class="input-group mb-3">
                         <label class="mr-2" for="edit_image_input" >Choose file</label>
                         <input name="file" type="file" id="edit_image_input" disabled>
-                        <button class="btn btn-sm btn-outline-info" type="button" id='edit_input_price'>Edit</button>
                     </div>
                 </td>
+                <td>
+                    <ul class="list-inline">
+                        <li>
+                            <button name = "del_entry" class="btn btn-outline-danger" type="button" id="del_entry">DELETE</button>
+                        </li>
+                        <li>
+                            <button name ="edit_entry" class="btn btn-outline-info" type="button"  id="edit_entry">Edit </button>
+                        </li>
+                    </ul>
+                </td>
             </tr>
-            {% comment %} {% endfor %} {% endcomment %}
+            {% endfor %}
         </tbody>
     </table>
 </div>
