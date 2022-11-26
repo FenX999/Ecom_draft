@@ -33,15 +33,33 @@ $(document).ready(function () {
 
 
 //comportement function
+$(document).ready(() =>{
+  //https://www.geeksforgeeks.org/preview-an-image-before-uploading-using-jquery/
+  $('#image_input').on('change',function(){
+    const file = $(this)[0].files[0];
+    if(file){
+      let reader = new FileReader();
+      reader.onload = function(event){
+        $('#img_preview').attr('src', event.target.result);
+      }
+      reader.readAsDataURL(file);
+    };
+
+  });
+});
 $(document).ready(function(){
   var n_row = $('#Attributes_table tbody tr').length;
   if(n_row === 2){
     $('#del_row').prop('disabled',true)
   };
   $('#btn_refresh').hide();
-  $('#id_content-input').wysiwyg({
+  $('#id_content-input').summernote({
+    tabsize: 2,
+    height: 100,
   });
-  $('#id_description-input').wysiwyg({
+  $('#id_description-input').summernote({
+    tabsize: 2,
+    height: 100,
   });
 });
 
@@ -49,60 +67,16 @@ $(document).on('click', '#btn_refresh',function(){
   location.reload(true);
 });
 
-$(document).on('click', '#add_row', function(e){
-  $('#del_row').prop('disabled',false)
+$(document).on('click', '#add_row_creation', function(e){
+    $('#del_row_creation').prop('disabled',false)
   // console.log('add clicked')
-  var index = $('.duplicable').length
-  var newId = 'duplicable'+index;
-  var row = `
-    <tr id="${newId}" class="duplicable">
-    <td>
-        <ul class="list-inline">
-            <li>
-                <button class="btn btn-outline-danger btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Delete Row" id="del_row"><i class="fa-solid fa-minus"></i></button>
-            </li>
-            <li>
-                <button  class="btn btn-outline-success btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Add Row" id="add_row"><i class="fa-solid fa-plus"></i></button>
-            </li>
-        </ul>
-    </td>
-    <td>
-        <div class="input-group mb-3">
-            <input class="form-control finition" type="text" id="finition_input" placeholder="Add a Finition" aria-label="Add a Finition" aria-describedby="finition_submit"  >
-        </div>
-    </td>
-    <td>
-        <div class="input-group mb-3">
-            <input class="form-control size" type="text" id="size_input" placeholder="Add a Size" aria-label="Add a size" aria-describedby="size_submit">
-        </div>
-    </td>
-    <td class="input_attr_price">
-        <div class="input-group mb-3">
-            <div class="input-group-prepend">
-                <span class="input-group-text">$</span>
-                <span class="input-group-text">0.00</span>
-            </div>
-            <input id="price_attr_input" type="text" class="form-control price" aria-label="Dollar amount (with dot and two decimal places)">
-        </div>
-    </td>
-    <td class="input_attr_img">
-        <div class="input-group mb-3">
-            <div class="input-group-prepend">
-                <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
-            </div>
-            <div class="custom-file">
-                <input type="file" class="custom-file-input img" id="img_attr_input" aria-describedby="inputGroupFileAddon01">
-                <label class="custom-file-label" for="img_attr_input">Choose file</label>
-            </div>
-        </div>
-    </td>
-  </tr>
-    `
-  $('#Attributes_table tbody').append(row);
+  var index = $('.creation_duplicable').length
+  var newId = 'creation_duplicable'+index;
+  var row = $('#creation_duplicable').clone().prop('id', newId).appendTo('tbody')
 });
 
 
-$(document).on("click",'#del_row',function(){
+$(document).on("click",'#del_row_creation',function(){
   // console.log('del clicked')
   $(this).closest('tr').remove(); 
 });
@@ -171,53 +145,64 @@ $(document).on('click', '#otag_submit', function(e){
   })
 });
 
-$(document).on('click', '#attribute_submit', function(e){
-  var attrs;
-   $('#row_source').map(function(){
-  attrs = $('select, input', 'td').map(function(){
-      return $(this).val();
-    }).get();
-  }).get();
-  console.log(attrs)
+$(document).on('click', '#finition_submit', function(e){
   $.ajax({
-    type: 'POST',
-    url :  window.location.pathname,
-    data : {
-      'ajax_post': 'create_finition',
-      'finition_sent': $('#finition_input').val(),
-      'size_sent': $('#size_input').val(),
-      'price_sent': $('#price_input').val(),
-      'img_sent': $('#img_input').val(),
-    },
-    success : function(){
-      console.log('finition-sent')
-    },
-    error: function(xhr, errmsg, err){
-      alert(xhr.status + ":" + xhr.responseText)
-    }
+  type: 'POST',
+  url :  window.location.pathname,
+  data : {
+    'ajax_post': 'create_finition',
+    'finition_sent': $('#finition_input').val(),
+  },
+  success : function(){
+    alert('finition sent')
+  },
+  error: function(xhr, errmsg, err){
+    alert(xhr.status + ":" + xhr.responseText)
+  }
 
-  })
+});
 });
 
+$(document).on('click', '#size_submit', function(e){
+  $.ajax({
+  type: 'POST',
+  url :  window.location.pathname,
+  data : {
+    'ajax_post': 'create_size',
+    'size_sent': $('#size_input').val(),
+  },
+  success : function(){
+    alert('size sent')
+  },
+  error: function(xhr, errmsg, err){
+    alert(xhr.status + ":" + xhr.responseText)
+  }
+
+});
+});
 
 
 
 $(document).on('click', '#product-submit', function(e){
   var attrs = [];
-  $('.duplicable').each(function(index, item){ 
+  
+  $('.creation_duplicable').each(function(){ 
     var id = $(this).attr('id');
-    var finition = $(this).find('.finition').val();
-    var size = $(this).find('.size').val();
-    var price = $(this).find('.price').val();
-    var image = $(this).find('.img').val();
+    var finition = $(this).find('#select_finition').val();
+    var size = $(this).find('#select_size').val();
+    var price = $(this).find('#price_attr_input').val();
+    var image = $(this).find('#image_input').val();
+    
     attrs.push({
       'id': id,
       'finition' : finition,
       'size' : size,
       'price' : price,
-      'img': image,
+      'image_name': image,
     });
+    
   });
+  console.log(attrs)
   $.ajax({
     type: 'POST',
     url :  window.location.pathname,
@@ -229,7 +214,6 @@ $(document).on('click', '#product-submit', function(e){
       'selected_ctag': $('#id_product_select_ctag').val(),
       'selected_otag': $('#id_product_select_otag').val(),
       'attr': JSON.stringify(attrs)
-        
       },
     success : function(response){
       var error = response.submit_failure
@@ -239,6 +223,24 @@ $(document).on('click', '#product-submit', function(e){
       }
       else{
       $('#btn_refresh').show();
+      var formData = new FormData();
+      formData.append('ajax_post', 'file_upload')
+      $('.creation_duplicable').each(function(){ 
+        formData.append('file', $("#image_input")[0].files[0]);
+      });
+        $.ajax({
+          url : window.location.pathname,
+          type: 'POST',
+          data: formData,
+          contentType: false,
+          processData: false,
+          mimeType: "multipart/form--data",
+          success: function(response){
+            for (var [key, value] of formData.entries())
+            console.log(key, value)
+            alert('Uploading Images...')
+          }
+        });
       }
     },
     error: function(xhr, errmsg, err){

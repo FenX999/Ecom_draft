@@ -89,14 +89,15 @@ class ProductImage(models.Model):
     Models that provide Table for Product Images
     """
     SKU = models.ForeignKey(ProductDetail, on_delete= models.CASCADE, related_name='image_sku')
-    img = models.ImageField(_('image'), upload_to='img', blank=False, unique=False, max_length=254)
+    alt_text = models.CharField(_('alternate text'), max_length=255, blank=True)
+    img = models.ImageField(_('image'), blank=False, unique=False, max_length=254)
     created_by = models.ForeignKey(User, verbose_name=_("Created by"), on_delete=models.PROTECT, related_name='image_creator')
     modified_by = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='image_editor',null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateField(auto_now=True)
     is_active = models.BooleanField(default=True)
 
-    def get_image(self):
+    def get_image_url(self):
         if self.image:
             return str(BASE_URL + self.image.url)
         return ""

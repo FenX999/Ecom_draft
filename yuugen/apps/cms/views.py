@@ -1,5 +1,7 @@
 import json
 
+from django.conf import settings
+from django.core.files.storage import FileSystemStorage
 from django.template.response import TemplateResponse
 from django.contrib import messages
 from django.shortcuts import redirect
@@ -148,12 +150,32 @@ def product_creator(request):
     context['otag'] = OperationTagForm()
     context['finition'] = FinitionForm()
     context['size'] = SizeForm()
-    context['image'] = ProductImageForm()
+    context['image'] = ProductImage()
     context['price'] = ProductPublicPriceForm()
 
     context['finition_list'] = Finition.objects.all()
     context['size_list'] = Size.objects.all()
     
+
+    media_url = settings.MEDIA_URL
+    print(media_url)
+
+    context['img_default'] = media_url+'default.jpg'
+
+    for key, value in request.POST.items():
+        print(key, value)    
+
+    #image upload 
+    # if request.POST.get('ajax_post') == 'file_upload':
+    #     uf = request.FILES['file']
+    #     if str(uf.name).split('.')[-1] == 'jpg' or 'png' or 'jpeg':
+    #         fs = FileSystemStorage()
+    #         name = fs.save(uf.name, uf)
+    #         url = fs.url(name)
+    #         print(f'image url as {url}')
+    #         context['images'] = url
+
+
     #Tag creation
     if request.POST.get('ajax_post') == 'create_ttag':
         ThemeTag.objects.create(
@@ -179,12 +201,22 @@ def product_creator(request):
             oslug = slugify(request.POST.get('sent_otag')),
         )
         context['product']['otag'].queryset = OperationTag.objects.all()
+    
+    #attributes as colore size creation
+    if request.POST.get('ajax_post') == 'create_finition':
+        Finition.objects.create(
+            value = request.POST.get('finition_sent'),
+        )
+        context['finition_list'] = Finition.objects.all()
+    if request.POST.get('ajax_post') == 'create_size':
+        Finition.objects.create(
+            value = request.POST.get('size_sent'),
+        )
+        context['size_list'] = Size.objects.all()
 
 
     #logic for product creation
     if request.POST.get('ajax_post') == ('create_product'):
-        # for key, value in request.POST.items():
-        #     print(key, value)
         fetched_name = request.POST.get('designation')
         compiled_sku = 'sku_'+fetched_name.lower()
         fetched_ttag = request.POST.get('selected_ttag')
@@ -227,53 +259,52 @@ def product_creator(request):
                     )
                 attr = json.loads(request.POST.get('attr'))
                 for row in attr:
+
+
                     print(row)
-                    fetched_finition =  row['finition'].lower()
+                    fetched_finition =  row['finition']
                     if fetched_finition:
-                        compiled_finition_sku = str('sku_'+fetched_name.lower()+'_'+fetched_finition)
-                        try: 
-                            fdetail = ProductDetail.objects.get(SKU = compiled_finition_sku, created_by = creator)
-                        except ObjectDoesNotExist:
-                            ProductDetail.objects.create(SKU = compiled_finition_sku, created_by = creator)
-                            fdetail = ProductDetail.objects.get(SKU = compiled_finition_sku, created_by = creator)
+                        qfintion = Finition.obects.get(id = row['finition'])
+                        compiled_finition_sku = 'sku_'+fetched_name.lower()+'_'+str(qfinition.value)
                         try:
-                            created_finition = Finition.objects.get(value = fetched_finition)
+                           fdetail =  ProductDetail.objects.get(sku = compiled_finition_sku)
                         except ObjectDoesNotExist:
-                            Finition.objects.create(value = fetched_finition)
-                            created_finition = Finition.objects.get(value = fetched_finition)
+                            ProductDetail.objects.create(SKU = compiled_finition_sku, created_by= creator)
+                            fdetail =  ProductDetail.objects.get(sku = compiled_finition_sku)
                         try:
-                            finition_index = FinitionIndex.objects.get(SKU = fdetail , created_by = creator,)
+                            ifinition = FinitionIndex.objects.get(SKU = fdetail)
                         except ObjectDoesNotExist:
-                            FinitionIndex.objects.create(SKU = fdetail ,created_by = creator)
-                            finition_index = FinitionIndex.objects.get(SKU = fdetail , created_by = creator,)
-                        finition_index.finition.add(created_finition)
-                        ProductImage.objects.get_or_create(img = row['img'], created_by= creator, SKU = fdetail)
+                            FinitionIndex.objects.create(SKU = fdetail, created_by = creator)
+                            ifinition = FinitionIndex.objects.get(SKU = fdetail)
+                        ifinition.finition.add(qfinition)
+                        #starting image processing in case images are related to finitions
+                        fetched_path = row['image_name']
+                        fetched_alt = row['alt_text']
+                        image_name = fetched_path.split('\\')[-1]
+                        image_path = str(media_url+image_name)
+                        image = ProductImage.objects.get('')
 
                     #size
                     fetched_size = row['size'].lower()
                     if fetched_size:
-                        compiled_size_sku = str('sku_'+fetched_name.lower()+'_'+fetched_size)
+                        qsize = Size.objects.get(id = fetched_size)
+                        compiled_size_sku = str('sku_'+fetched_name.lower()+'_'+str(qsize.value))
 
                         try:
-                            sdetail = ProductDetail.objects.get(SKU = compiled_size_sku, created_by = creator)
+                            dsize = ProductDetail.objects.get(SKU = compiled_size_sku, created_by = creator)
                         except ObjectDoesNotExist:
                             ProductDetail.objects.create(SKU = compiled_size_sku, created_by = creator)
-                            sdetail = ProductDetail.objects.get(SKU = compiled_size_sku, created_by = creator)
+                            dsize = ProductDetail.objects.get(SKU = compiled_size_sku, created_by = creator)
                         try:
-                            created_size = Size.objects.get(value = fetched_size)
-                        except ObjectDoesNotExist:
-                            Size.objects.create(value = fetched_size)
-                            created_size = Size.objects.get(value = fetched_size)
-                        try:
-                            size_index = SizeIndex.objects.get(SKU = sdetail, created_by= creator)
+                            isize = SizeIndex.objects.get(SKU = dsize, created_by= creator)
                         except ObjectDoesNotExist:
                             SizeIndex.objects.create(SKU = sdetail, created_by= creator)
-                            size_index = SizeIndex.objects.get(SKU = sdetail, created_by= creator)
-                        size_index.size.add(created_size)
+                            isize = SizeIndex.objects.get(SKU = sdetail, created_by= creator)
+                        isize.size.add(qsize)
                     #price 
                     fetched_price = row['price']
                     if fetched_price and fetched_finition and fetched_size:
-                        compiled_price_sku = str('sku_'+fetched_name.lower()+'_'+fetched_finition+'_'+fetched_size)
+                        compiled_price_sku = 'sku_'+fetched_name.lower()+'_'+str(qfinition)+'_'+str(qsize)
                         ProductDetail.objects.create(SKU = compiled_price_sku, created_by= creator)
                         PublicPrice.objects.create(public_price = fetched_price, SKU = ProductDetail.objects.get(SKU = compiled_price_sku), created_by = creator)
 
@@ -291,7 +322,7 @@ def product_creator(request):
                         msg =  {'submit_failure':"price missing check your entry"}
                         return JsonResponse(msg)
             else:
-                msg = {'submit_failure':  'Tag Error: Tags cannot be left empty!'}
+                msg = {'submit_failure':  'Tags cannot be left empty!'}
                 print(msg)
                 return JsonResponse(msg)
         else:
@@ -328,7 +359,7 @@ def view_product_form(request, pslug):
         }
         attr.append(output)
     context['attributes'] = attr
-    
+
     #dealing with ajax call for new entry plus editing existing
     if request.POST.get('ajax_post') == 'create_ttag':
         ThemeTag.objects.create(
@@ -354,6 +385,17 @@ def view_product_form(request, pslug):
             oslug = slugify(request.POST.get('sent_otag')),
         )
         context['otag'] = OperationTag.objects.all()
+    
+        if request.POST.get('ajax_post') == 'create_finition':
+            Finition.objects.create(
+                value = request.POST.get('finition_sent'),
+            )
+            context['finitions'] = Finition.objects.all()
+        if request.POST.get('ajax_post') == 'create_size':
+            Finition.objects.create(
+                value = request.POST.get('size_sent'),
+            )
+            context['sizes'] = Size.objects.all()
     return TemplateResponse(request, template, context)
 
 def del_product(request, pslug):
