@@ -158,7 +158,7 @@ def product_creator(request):
     
 
     media_url = settings.MEDIA_URL
-    print(media_url)
+    file_list = os.listdir(media_url)
 
     context['img_default'] = media_url+'default.jpg'
 
@@ -166,14 +166,18 @@ def product_creator(request):
         print(key, value)    
 
     #image upload 
-    # if request.POST.get('ajax_post') == 'file_upload':
-    #     uf = request.FILES['file']
-    #     if str(uf.name).split('.')[-1] == 'jpg' or 'png' or 'jpeg':
-    #         fs = FileSystemStorage()
-    #         name = fs.save(uf.name, uf)
-    #         url = fs.url(name)
-    #         print(f'image url as {url}')
-    #         context['images'] = url
+    if request.POST.get('ajax_post') == 'file_upload':
+        uf = request.FILES['file']
+        if str(uf.name).split('.')[-1] == 'jpg' or 'png' or 'jpeg':
+            if uf not in file_list:
+                fs = FileSystemStorage()
+                name = fs.save(uf.name, uf)
+                url = fs.url(name)
+                print(f'image url as {url}')
+                context['images'] = url
+            else:
+                msg = {'submit_failure': f'image already uploaded check the file name'}
+                return JsonResponse(msg)
 
 
     #Tag creation
@@ -235,13 +239,6 @@ def product_creator(request):
                 try :
                     product = Product.objects.get(
                         designation= fetched_name,
-                        slug = slugify(fetched_name),
-                        description = request.POST.get('description'),
-                        SKU = ProductDetail.objects.get(SKU = compiled_sku),
-                        created_by = creator,
-                        ttag = ThemeTag.objects.get(ttag = fetched_ttag),
-                        ctag = CatalogTag.objects.get(ctag = fetched_ctag),
-                        otag = OperationTag.objects.get(otag = fetched_otag ),
                     )
                     if product:
                         msg = {'submit_failure':'Product name already exist, choose something else.'}
@@ -282,7 +279,18 @@ def product_creator(request):
                         fetched_alt = row['alt_text']
                         image_name = fetched_path.split('\\')[-1]
                         image_path = str(media_url+image_name)
-                        image = ProductImage.objects.get('')
+                        try:
+                            image = ProductImage.objects.get(img = image_path)
+                            msg = {'submit_failure':'image already created check your entry'}
+                            return JsonResponse(msg)
+                        except ObjectDoesNotExist:
+                            ProductImage.objects.create(
+                                img = image_path,
+                                alt_text = fetched_alt,
+                                SKU = fdetail,
+                                created_by= creator,
+                                )
+
 
                     #size
                     fetched_size = row['size'].lower()
@@ -301,7 +309,7 @@ def product_creator(request):
                             SizeIndex.objects.create(SKU = sdetail, created_by= creator)
                             isize = SizeIndex.objects.get(SKU = sdetail, created_by= creator)
                         isize.size.add(qsize)
-                    #price 
+                    #price processing with and without attributes 
                     fetched_price = row['price']
                     if fetched_price and fetched_finition and fetched_size:
                         compiled_price_sku = 'sku_'+fetched_name.lower()+'_'+str(qfinition)+'_'+str(qsize)
@@ -317,6 +325,22 @@ def product_creator(request):
                     elif fetched_price and not fetched_finition and not fetched_size:
                         PublicPrice.objects.create(public_price= fetched_price, SKU = ProductDetail.objects.get(SKU = compiled_sku), created_by= creator)
                         ProductImage.objects.create(img = row['img'], created_by = creator, SKU = ProductDetail.objects.get(SKU= compiled_sku))
+                        #images processing if no product attributes 
+                        fetched_path = row['image_name']
+                        fetched_alt = row['alt_text']
+                        image_name = fetched_path.split('\\')[-1]
+                        image_path = str(media_url+image_name)
+                        try:
+                            image = ProductImage.objects.get(img = image_path)
+                            msg = {'submit_failure':'image already created check your entry'}
+                            return JsonResponse(msg)
+                        except ObjectDoesNotExist:
+                            ProductImage.objects.create(
+                                img = image_path,
+                                alt_text = fetched_alt,
+                                SKU = fdetail,
+                                created_by= creator,
+                                )
 
                     else :
                         msg =  {'submit_failure':"price missing check your entry"}
